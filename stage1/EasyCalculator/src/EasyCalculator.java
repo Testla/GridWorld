@@ -54,7 +54,7 @@ public class EasyCalculator extends JFrame {
         add(btnOK);
      
         setTitle("Easy Calculator");
-        setSize(250 * 2, (100 + 30) * 2);
+        setSize(250 * 2, 100 * 2);
         setVisible(true);         // "super" JFrame shows
     }
  
@@ -62,7 +62,6 @@ public class EasyCalculator extends JFrame {
     public static void main(String[] args) {
        // Invoke the constructor to setup the GUI, by allocating an instance
         EasyCalculator app = new EasyCalculator();
-        
     }
  
     /* ActionListener as an inner class */
