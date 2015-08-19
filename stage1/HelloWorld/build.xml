@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project default="test" name="Project Argon">
+    <description>A simple Java project</description>
+
+    <property name="srcDir" location="src"/>
+    <property name="testDir" location="test"/>
+    <property name="testClassPath" location="~/training/document/junit4.9/junit-4.9.jar"/>
+    <property name="buildDir" location="build"/>
+
+    <property name="lib.dir" value="lib"/>
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${buildDir}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac includeantruntime="true" srcdir="${srcDir}" destdir="${buildDir}" classpathref="classpath"/>
+        <javac includeantruntime="true" srcdir="${testDir}" destdir="${buildDir}" classpathref="classpath" />
+    </target>
+
+    <target name="test" depends="compile">
+        <junit>
+            <classpath>
+                <fileset dir="${lib.dir}" includes="**/*.jar"/>
+                <pathelement path="${buildDir}"/>
+            </classpath>
+            <formatter type="plain" />
+            <!--<test name="TestHelloWorld" />-->
+            <batchtest fork="yes" todir=".">
+                <fileset dir="${buildDir}">
+                    <include name="**/*Test*.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="clean">
+        <delete dir="${buildDir}"/>
+    </target>
+</project>
