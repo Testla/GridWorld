@@ -1,0 +1,34 @@
+Do You Know?
+Set 2
+
+1. What is the role of the instance variable sideLength?
+Store the side length of the box.
+
+2. What is the role of the instance variable steps?
+Remember how many steps has the bug runned on this side.
+
+3. Why is the turn method called twice when steps becomes equal to sideLength?
+Because if we want the bug to move in a square, it should turn 90 degrees whenever it finishs an edge.
+
+4. Why can the move method be called in the BoxBug class when there is no move method in the BoxBug code?
+The move method is inherited from the Bug Class.
+
+5. After a BoxBug is constructed, will the size of its square pattern always be the same? Why or why not?
+Yes. Because the sidelength is stored in a private member variable and there is no method to access it.
+
+6. Can the path a BoxBug travels ever change? Why or why not?
+Yes. If the bug encounters an edge before it reaches the boundary of the box, it turns immediately and the position of the box changes.
+
+7. When will the value of steps be zero?
+When the bug is constructed, or when it encounters an edge or reaches the boundary of the box.
+
+
+Exercises
+
+1. Write a class CircleBug that is identical to BoxBug, except that in the act method the turn method is called once instead of twice. How is its behavior different from a BoxBug?
+It tends to move in a path of right octagon.
+
+5. Study the code for the BoxBugRunner class. Summarize the steps you would use to add another BoxBug actor to the grid.
+First, create a BoxBug object using the keyword new. Then call the add method
+of the world to add the bug to the grid.
+
