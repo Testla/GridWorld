@@ -1,0 +1,50 @@
+Set 3
+
+Assume the following statements when answering the following questions.
+Location loc1 = new Location(4, 3);
+Location loc2 = new Location(3, 4);
+
+1. How would you access the row value for loc1?
+
+loc1.getRow()
+
+2. What is the value of b after the following statement is executed?
+boolean b = loc1.equals(loc2);
+
+false
+
+3. What is the value of loc3 after the following statement is executed?
+Location loc3 = loc2.getAdjacentLocation(Location.SOUTH);
+
+Location(4, 4)
+
+4. What is the value of dir after the following statement is executed?
+int dir = loc1.getDirectionToward(new Location(6, 5));
+
+135 (southeast)
+
+5. How does the getAdjacentLocation method know which adjacent location to return?
+
+First, round the direction to closest multiple of 45.
+Then, use a branch to determine what dc and dr should be.
+Finally, add dc and dr to the original location to get the adjacent location.
+
+Set 4
+
+1. How can you obtain a count of the objects in a grid? How can you obtain a count of the empty locations in a bounded grid?
+
+getOccupiedLocations().length
+getNumRow() * getNumCols() - getOccupiedLocations().length
+
+2. How can you check if location (10,10) is in a grid?
+
+isValid(new Location(10, 10))
+
+3. Grid contains method declarations, but no code is supplied in the methods. Why? Where can you find the implementations of these methods?
+
+Because it is an abstract class. BoundedGrid and UnboundedGrid.
+
+4. All methods that return multiple objects return them in an ArrayList. Do you think it would be a better design to return the objects in an array? Explain your answer.
+
+Because in these methods we can't know the number of objects in advance. To use array we will have to iterate one more time to determine the size of the array.
+
