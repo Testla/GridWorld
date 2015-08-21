@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Jumper" basedir="." default="test-run">
+    <property name="src.dir" value="${basedir}/src"/>
+    <property name="lib.dir" value="${basedir}/lib"/>
+    <property name="test.dir" value="${basedir}/test"/>
+    <property name="build.dir" value="${basedir}/build"/>
+    <property name="build.classes" value="${build.dir}/classes"/>
+    <property name="build.test.dir" value="${build.dir}/test"/>
+    <property name="build.test.classes" value="${build.test.dir}/classes"/>
+    <property name="build.test.report" value="${build.test.dir}/report"/>
+    
+    <path id="common-jar">
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
+
+    <path id="src-compile-path">
+        <path refid="common-jar"/>
+        <pathelement location="${src.dir}"/>
+    </path>
+
+    <path id="test-compile-path">
+        <path refid="src-compile-path"/>
+        <pathelement location="${test.dir}"/>
+        <pathelement location="${build.classes}"/>
+    </path>
+
+    <path id="test-run-path">
+        <path refid="test-compile-path"/>
+        <pathelement location="${build.test.classes}"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.classes}"/>
+        <mkdir dir="${build.test.dir}"/>
+        <mkdir dir="${build.test.classes}"/>
+        <mkdir dir="${build.test.report}"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <javac srcdir="${src.dir}" destdir="${build.classes}" classpathref="src-compile-path" includeantruntime="true"/>
+    </target>
+
+    <target name="test-compile" depends="compile">
+        <javac srcdir="${test.dir}" destdir="${build.test.classes}" classpathref="test-compile-path" includeantruntime="true"/>
+    </target>
+    
+    <target name="test-run" depends="test-compile">
+        <junit haltonfailure="false">
+            <classpath refid="test-run-path"/>
+            <formatter type="xml"/>
+            <batchtest todir="${build.test.report}">
+                <fileset dir="${build.test.classes}">
+                    <include name="*Runner.class"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <junitreport todir="${build.test.report}">
+            <fileset dir="${build.test.report}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${build.test.report}/html"/>
+        </junitreport>
+    </target>
+
+
+
+</project>
+

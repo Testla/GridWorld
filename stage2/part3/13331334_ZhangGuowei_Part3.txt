@@ -48,3 +48,81 @@ Because it is an abstract class. BoundedGrid and UnboundedGrid.
 
 Because in these methods we can't know the number of objects in advance. To use array we will have to iterate one more time to determine the size of the array.
 
+Set 5
+
+1. Name three properties of every actor.
+
+grid, location, direction
+
+2. When an actor is constructed, what is its direction and color?
+
+Location.NORTH
+Color.BLUE
+
+3. Why do you think that the Actor class was created as a class instead of an interface?
+
+Most method of Actor 's implementation is alomst determined, except that act() is free.
+For ActorWorld, Actor needs to be an abstract class.
+Actor has member variable.
+
+4. Can an actor put itself into a grid twice without first removing itself? Can an actor remove itself from a grid twice? Can an actor be placed into a grid, remove itself, and then put itself back? Try it out. What happens?
+
+No. The method putSelfInGrid will first check if the actor is currently in a grid.
+No. The method removeSelfFromGrid will first check if the the actor is currently in a grid.
+Yes. It succeed and nothing went wrong.
+
+5. How can an actor turn 90 degrees to the right?
+
+setDirection((getDirection() + 90) % 360).
+
+
+Set 6
+
+1. Which statement(s) in the canMove method ensures that a bug does not try to move out of its grid?
+
+if (!gr.isValid(next))
+    return false;
+
+2. Which statement(s) in the canMove method determines that a bug will not walk into a rock?
+
+return (neighbor == null) || (neighbor instanceof Flower);
+
+3. Which methods of the Grid interface are invoked by the canMove method and why?
+
+isValid, get
+To check if the destination is in the grid and does not contain a non-flower object.
+
+4. Which method of the Location class is invoked by the canMove method and why?
+
+getAdjacentLocation
+To find out the location of the destination.
+
+5. Which methods inherited from the Actor class are invoked in the canMove method?
+
+getGrid, getLocation, getDirection
+
+6. What happens in the move method when the location immediately in front of the bug is out of the grid?
+
+The bug removes itself from the grid.
+
+7. Is the variable loc needed in the move method, or could it be avoided by calling getLocation() multiple times?
+
+Yes. Because the location may has changed, and getLocation() returns the current location, so loc is used to remember the original one.
+
+8. Why do you think the flowers that are dropped by a bug have the same color as the bug?
+
+The flowers dropped is constructed with the bug's color.
+
+9. When a bug removes itself from the grid, will it place a flower into its previous location?
+
+Yes, it will.
+
+10. Which statement(s) in the move method places the flower into the grid at the bug's previous location?
+
+Flower flower = new Flower(getColor());
+flower.putSelfInGrid(gr, loc);
+
+11. If a bug needs to turn 180 degrees, how many times should it call the turn method?
+
+4.
+
