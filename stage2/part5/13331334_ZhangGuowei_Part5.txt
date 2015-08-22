@@ -1,0 +1,19 @@
+Set 10
+
+The source code for the AbstractGrid class is in Appendix D.
+
+1. Where is the isValid method specified? Which classes provide an implementation of this method?
+
+Don't know what "specified" means... It is declared in Grid and implemented in BoundedGrid and UnboundedGrid.
+
+2. Which AbstractGrid methods call the isValid method? Why don't the other methods need to call it?
+
+getValidAdjacentLocations. because the other methods call getValidAdjacentLocations.
+
+3. Which methods of the Grid interface are called in the getNeighbors method? Which classes provide implementations of these methods?
+
+
+
+
+4. Why must the get method, which returns an object of type E, be used in the getEmptyAdjacentLocations method when this method returns locations, not objects of type E?
+5. What would be the effect of replacing the constant Location.HALF_RIGHT with Location.RIGHT in the two places where it occurs in the getValidAdjacentLocations method?
