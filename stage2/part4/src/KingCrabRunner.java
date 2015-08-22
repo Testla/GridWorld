@@ -36,6 +36,8 @@ public final class KingCrabRunner {
         world.add(new Location(4, 6), new Rock());
         world.add(new Location(5, 5), new KingCrab());
         world.add(new Location(4, 3), new KingCrab());
+        world.add(new Location(0, 6), new Rock());
+        world.add(new Location(1, 5), new KingCrab());
         world.show();
     }
 }

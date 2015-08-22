@@ -17,29 +17,26 @@
  */
 
 import info.gridworld.actor.ActorWorld;
+import info.gridworld.actor.Flower;
 import info.gridworld.actor.Rock;
 import info.gridworld.grid.Location;
 
 /**
- * This class runs a world that contains QuickCrab critters. <br />
+ * This class runs a world that contains RockHound critters. <br />
  * This class is not tested on the AP CS A and AB exams.
  */
-public final class QuickCrabRunner {
-    private QuickCrabRunner() {
+public final class TwistCritterRunner {
+    private TwistCritterRunner() {
         // not called
     }
 
     public static void main(String[] args) {
         ActorWorld world = new ActorWorld();
-        world.add(new Location(2, 5), new QuickCrab());
-
-        world.add(new Location(5, 2), new Rock());
-        world.add(new Location(5, 5), new QuickCrab());
-        world.add(new Location(5, 7), new Rock());
-        
-        world.add(new Location(8, 3), new Rock());
-        world.add(new Location(8, 5), new QuickCrab());
-        world.add(new Location(8, 7), new Rock());
+        for (int i = 0; i < 10; ++i) {
+            world.add(new Rock());
+            world.add(new Flower());
+        }
+        world.add(new TwistCritter());
         world.show();
     }
 }

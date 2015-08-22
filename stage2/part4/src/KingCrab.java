@@ -24,6 +24,8 @@ public class KingCrab extends CrabCritter {
                            getLocation().getDirectionToward(actorLocation));
             if (getGrid().isValid(destination)) {
                 a.moveTo(destination);
+            } else {
+                a.removeSelfFromGrid();
             }
         }
     }

@@ -1,0 +1,75 @@
+import java.util.ArrayList;
+
+import info.gridworld.actor.Actor;
+import info.gridworld.actor.Critter;
+import info.gridworld.actor.Rock;
+import info.gridworld.grid.Grid;
+import info.gridworld.grid.Location;
+
+
+public class TwistCritter extends Critter {
+    private int range;
+    
+    public TwistCritter(int initRange) {
+        range = initRange;
+    }
+    
+    /**
+     * Gets the actors for processing. Implemented to return the actors that
+     * are within range steps. <br />
+     * Postcondition: The state of all actors is unchanged.
+     * 
+     * @return a list of actors that this critter wishes to process.
+     */
+    @Override
+    public ArrayList<Actor> getActors() {
+    	ArrayList<Actor> actors = new ArrayList<Actor>();
+        Location loc = getLocation();
+        for (int r = loc.getRow() - range; r <= loc.getRow() + range; ++r)
+            for (int c = loc.getCol() - range; c <= loc.getCol() + range; ++c)
+                if ((r != loc.getRow() || c !=  loc.getCol())) {
+                	Location targetLocation = new Location(r, c);
+                    if (getGrid().isValid(targetLocation)) {
+                    	Actor actor = getGrid().get(targetLocation);
+                    	if (actor != null)
+                    		actors.add(actor);
+                    }
+                }
+        return actors;
+    }
+    
+    /**
+     * Processes the elements of <code>actors</code>. New actors may be added to
+     * empty locations. Implemented to Rotate them by 90 degrees. <br />
+     * Postcondition: (1) The state of all actors in the grid other than this
+     * critter and the elements of <code>actors</code> is unchanged. (2) The
+     * location of this critter is unchanged.
+     * 
+     * @param actors
+     *            the actors to be processed
+     */
+    public void processActors(ArrayList<Actor> actors) {
+        Grid gr = getGrid();
+        Location loc = getLocation(), newLocation;
+        if (loc.getCol() < range || loc.getCol() + range >= gr.getNumCols()
+        		|| loc.getRow() < range || loc.getRow() + range >= gr.getNumRows()) {
+        	return;
+        }
+        ArrayList<Location> newLocations = new ArrayList<Location>();
+        for (Actor a : actors) {
+            // r = c0, c = -r0
+            newLocation = new Location(
+                    loc.getRow() + a.getLocation().getCol() - loc.getCol(),
+                    loc.getCol() - a.getLocation().getRow() + loc.getRow()
+            );
+            newLocations.add(newLocation);
+            if (gr.isValid(newLocation)) {
+                a.removeSelfFromGrid();
+            }
+        }
+        for (int i = 0; i < actors.size(); ++i) {
+            if (gr.isValid(newLocations.get(i)))
+                actors.get(i).putSelfInGrid(gr, newLocations.get(i));
+        }
+    }
+}

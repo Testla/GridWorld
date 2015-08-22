@@ -29,8 +29,8 @@ public final class BlusterCritterRunner {
 
     public static void main(String[] args) {
         ActorWorld world = new ActorWorld();
-        for (int i = 0; i < 20; ++i) {
-            world.add(new BlusterCritter(3));
+        for (int i = 0; i < 25; ++i) {
+            world.add(new BlusterCritter(2));
         }
         world.show();
     }

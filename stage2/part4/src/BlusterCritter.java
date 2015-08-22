@@ -57,21 +57,22 @@ public class BlusterCritter extends Critter {
      *            the actors to be processed
      */
     @Override
-    public void processActors(ArrayList<Actor> actors)
-    {
-        int n = actors.size(), times;
-        if (n < c) {
-            times = -1;
-        } else {
-            times = 1;
-        }
+    public void processActors(ArrayList<Actor> actors) {
+        int n = actors.size();
         Color color = getColor();
-        int red = (int) (color.getRed() * (1 + DARKENING_FACTOR * times));
-        int green = (int) (color.getGreen() * (1 + DARKENING_FACTOR * times));
-        int blue = (int) (color.getBlue() * (1 + DARKENING_FACTOR * times));
-        red = Math.min(red, 255);
-        green = Math.min(green, 255);
-        blue = Math.min(blue, 255);
-        setColor(new Color(red, green, blue));
+        if (n < c) {
+            int red = (int) (color.getRed() * (1 - DARKENING_FACTOR));
+            int green = (int) (color.getGreen() * (1 - DARKENING_FACTOR));
+            int blue = (int) (color.getBlue() * (1 - DARKENING_FACTOR));
+            setColor(new Color(red, green, blue));
+        } else {
+            int red = color.getRed() + 8;
+            int green = color.getGreen() + 8;
+            int blue = color.getBlue() + 8;
+            red = Math.min(red, 255);
+            green = Math.min(green, 255);
+            blue = Math.min(blue, 255);
+            setColor(new Color(red, green, blue));
+        }
     }
 }
