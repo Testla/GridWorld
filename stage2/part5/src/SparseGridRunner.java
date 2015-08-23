@@ -16,7 +16,7 @@ final class SparseGridRunner {
         world.addGridClass("SparseBoundedGrid");
         world.addGridClass("SparseBoundedGrid2");
         world.addGridClass("UnboundedGrid2");
-        for (int i = 0; i < 100; ++i) { 
+        for (int i = 0; i < 10; ++i) { 
             world.add(new Critter());
             world.add(new Rock());
             world.add(new Bug());
