@@ -1,5 +1,6 @@
 import info.gridworld.actor.ActorWorld;
-import info.gridworld.grid.Location;
+import info.gridworld.actor.Bug;
+import info.gridworld.actor.Rock;
 import info.gridworld.actor.Critter;
 
 /**
@@ -14,8 +15,12 @@ final class SparseGridRunner {
         ActorWorld world = new ActorWorld();
         world.addGridClass("SparseBoundedGrid");
         world.addGridClass("SparseBoundedGrid2");
-         world.addGridClass("UnboundedGrid2");
-        world.add(new Location(2, 2), new Critter());
+        world.addGridClass("UnboundedGrid2");
+        for (int i = 0; i < 100; ++i) { 
+            world.add(new Critter());
+            world.add(new Rock());
+            world.add(new Bug());
+        }
         world.show();
     }
 }

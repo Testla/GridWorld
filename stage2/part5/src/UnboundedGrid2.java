@@ -42,22 +42,26 @@ public class UnboundedGrid2<E> extends AbstractGrid<E> {
         occupantArray = new Object[size][size];
     }
 
+    @Override
     public int getNumRows() {
         return -1;
     }
 
+    @Override
     public int getNumCols() {
         return -1;
     }
 
+    @Override
     public boolean isValid(Location loc) {
         return (loc.getRow() >= 0 && loc.getCol() >= 0);
     }
-    
+
     private boolean outOfBound(Location loc) {
         return loc.getRow() >= size || loc.getCol() >= size;
     }
 
+    @Override
     public ArrayList<Location> getOccupiedLocations() {
         ArrayList<Location> theLocations = new ArrayList<Location>();
 
@@ -74,6 +78,7 @@ public class UnboundedGrid2<E> extends AbstractGrid<E> {
         return theLocations;
     }
 
+    @Override
     public E get(Location loc) {
         if (!isValid(loc)) {
             throw new IllegalArgumentException("Location " + loc
@@ -87,6 +92,7 @@ public class UnboundedGrid2<E> extends AbstractGrid<E> {
         }
     }
 
+    @Override
     public E put(Location loc, E obj) {
         if (obj == null) {
             throw new IllegalArgumentException("obj == null");
@@ -112,6 +118,7 @@ public class UnboundedGrid2<E> extends AbstractGrid<E> {
         return oldOccupant;
     }
 
+    @Override
     public E remove(Location loc) {
         if (!isValid(loc)) {
             throw new IllegalArgumentException("Location " + loc
