@@ -1,4 +1,4 @@
-package imagereader;
+import imagereader.IImageIO;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -7,16 +7,13 @@ import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
 
 public class ImplementImageIO implements IImageIO {
-
     @Override
     public Image myRead(String filePath) throws IOException {
         final int maxLength = 10 * 1024 * 1024;
@@ -41,25 +38,12 @@ public class ImplementImageIO implements IImageIO {
         // discard header
         byteBuffer.get(imageData, 0, imageDataOffset);
         byteBuffer.get(imageData, 0, fileLength - imageDataOffset);
-
-        BufferedImage image = new BufferedImage(
-                width, 
-                height, 
-                BufferedImage.TYPE_INT_RGB
-        );
-        image.setRGB(0, 0, width, height, byteArrayToRgbArray(imageData, width, height), 0, width);
-//        Image img = Toolkit.getDefaultToolkit().createImage(
-//                new MemoryImageSource(
-//                        width, height,
-//                        byteArrayToRgbArray(imageData, width, height),
-//                        0, width
-//                ));
-        return image;
+        return Toolkit.getDefaultToolkit().createImage(
+                new MemoryImageSource(width, height, byteArrayToRgbArray(imageData, width, height), 0, width));
     }
 
     @Override
     public Image myWrite(Image image, String filePath) throws IOException {
-        // TODO Auto-generated method stub
         ImageIO.write(
                 toBufferedImage(image),
                 "BMP",
@@ -75,14 +59,14 @@ public class ImplementImageIO implements IImageIO {
      *            The Image to be converted
      * @return The converted BufferedImage
      */
-    private static BufferedImage toBufferedImage(Image img) {
+    public static BufferedImage toBufferedImage(Image img) {
         if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
 
         // Create a buffered image with transparency
         BufferedImage bimage = new BufferedImage(img.getWidth(null),
-                img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                img.getHeight(null), BufferedImage.TYPE_INT_RGB);
 
         // Draw the image on to the buffered image
         Graphics2D bGr = bimage.createGraphics();
@@ -99,9 +83,9 @@ public class ImplementImageIO implements IImageIO {
         for (int row = 0; row < height; ++row) {
             for (int col = 0; col < width; ++col) {
                 int offset = (height - 1 - row) * strideLength + col * 3;
-                result[row * width + col] = byteArray[offset]
-                                            + ((int)byteArray[offset + 1] << 8)
-                                            + ((int)byteArray[offset + 2] << 16);
+                result[row * width + col] = (int)(byteArray[offset] & 0xff)
+                                            + ((int)(byteArray[offset + 1] & 0xff) << 8)
+                                            + ((int)(byteArray[offset + 2] & 0xff) << 16) + 0xff000000;
             }
         }
         return result;

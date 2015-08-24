@@ -1,11 +1,10 @@
-package imagereader;
-
-import javax.imageio.ImageIO;
-
 // ImagaReaderRunner.java
 import imagereader.Runner;
  
-public class ImageReaderRunner {
+public final class ImageReaderRunner {
+    private ImageReaderRunner() {
+        // not called
+    }
     public static void main(String[] args) {
         ImplementImageIO imageioer = new ImplementImageIO();
         ImplementImageProcesser processor = new ImplementImageProcesser();

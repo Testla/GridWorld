@@ -1,16 +1,15 @@
-package imagereader;
+import imagereader.IImageProcessor;
 
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
 
 public class ImplementImageProcesser implements IImageProcessor {
     
-    public static final int RedBitmask = 0xffff0000,
-                            GreenBitmask = 0xff00ff00,
-                            BlueBitmask = 0xff0000ff;
+    public static final int RED_BITMASK = 0xffff0000,
+                            GREEN_BITMASK = 0xff00ff00,
+                            BLUE_BITMASK = 0xff0000ff;
             
     private class BitmaskFilter extends RGBImageFilter {
         private int bitmask;
@@ -18,8 +17,8 @@ public class ImplementImageProcesser implements IImageProcessor {
             // The filter's operation does not depend on the
             // pixel's location, so IndexColorModels can be
             // filtered directly.
-            canFilterIndexColorModel = true;
             this.bitmask = bitmask;
+            canFilterIndexColorModel = true;
         }
 
         @Override
@@ -30,7 +29,6 @@ public class ImplementImageProcesser implements IImageProcessor {
 
     
     private class GrayFilter extends RGBImageFilter {
-        private int bitmask;
         public GrayFilter() {
             // The filter's operation does not depend on the
             // pixel's location, so IndexColorModels can be
@@ -40,10 +38,10 @@ public class ImplementImageProcesser implements IImageProcessor {
 
         @Override
         public int filterRGB(int x, int y, int rgb) {
-            int I = (int)(((rgb >> 16) & 0xff) * 0.299
+            int gray = (int)(((rgb >> 16) & 0xff) * 0.299
                         + ((rgb >> 8) & 0xff) * 0.587
                         + ((rgb >> 0) & 0xff) * 0.114);
-            return ((rgb & 0xff000000) | (I << 16) | (I << 8) | I);
+            return ((rgb & 0xff000000) | (gray << 16) | (gray << 8) | gray);
         }
     }
 
@@ -52,7 +50,7 @@ public class ImplementImageProcesser implements IImageProcessor {
         return Toolkit.getDefaultToolkit().createImage(
                 new FilteredImageSource(
                         image.getSource(),
-                        new BitmaskFilter(BlueBitmask)));
+                        new BitmaskFilter(BLUE_BITMASK)));
     }
 
     @Override
@@ -60,7 +58,7 @@ public class ImplementImageProcesser implements IImageProcessor {
         return Toolkit.getDefaultToolkit().createImage(
                 new FilteredImageSource(
                         image.getSource(),
-                        new BitmaskFilter(GreenBitmask)));
+                        new BitmaskFilter(GREEN_BITMASK)));
     }
 
     @Override
@@ -68,12 +66,11 @@ public class ImplementImageProcesser implements IImageProcessor {
         return Toolkit.getDefaultToolkit().createImage(
                 new FilteredImageSource(
                         image.getSource(),
-                        new BitmaskFilter(RedBitmask)));
+                        new BitmaskFilter(RED_BITMASK)));
     }
 
     @Override
     public Image showGray(Image image) {
-//        return javax.swing.GrayFilter.createDisabledImage(image);
         return Toolkit.getDefaultToolkit().createImage(
                 new FilteredImageSource(
                         image.getSource(),
