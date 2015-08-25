@@ -39,8 +39,8 @@ public class ImplementImageProcesser implements IImageProcessor {
         @Override
         public int filterRGB(int x, int y, int rgb) {
             int gray = (int)(((rgb >> 16) & 0xff) * 0.299
-                        + ((rgb >> 8) & 0xff) * 0.587
-                        + ((rgb >> 0) & 0xff) * 0.114);
+                            + ((rgb >> 8) & 0xff) * 0.587
+                            + ((rgb >> 0) & 0xff) * 0.114);
             return ((rgb & 0xff000000) | (gray << 16) | (gray << 8) | gray);
         }
     }
