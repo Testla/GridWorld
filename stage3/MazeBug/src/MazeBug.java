@@ -8,7 +8,6 @@ import info.gridworld.grid.*;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Stack;
 

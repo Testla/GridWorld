@@ -15,6 +15,7 @@ final class MazeBugRunner {
         ActorWorld world = new ActorWorld();
         world.add(new Location(0,0), new MazeBug());
         world.addOccupantClass("info.gridworld.maze.AdvancedMazeBug");
+        world.addOccupantClass("info.gridworld.maze.OptimalMazeBug");
         world.add(new Location(1,1),new Rock());
         world.show();
     }

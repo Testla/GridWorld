@@ -29,7 +29,7 @@ public class AdvancedMazeBug extends Bug {
     private Stack<ArrayList<Location>> crossLocation = new Stack<ArrayList<Location>>();
     private Integer stepCount = 0;
     // final message has been shown
-    boolean hasShown = false;
+    private boolean hasShown = false;
     // north, east, south, west
     private int directionWeight[] = new int[4];
 
