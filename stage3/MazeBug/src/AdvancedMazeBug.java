@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  * A <code>MazeBug</code> can find its way in a maze. <br />
  * The implementation of this class is testable on the AP CS A and AB exams.
  */
-public class MazeBug extends Bug {
+public class AdvancedMazeBug extends Bug {
     private Location next;
     private boolean isEnd = false;
     /* 
@@ -29,7 +29,9 @@ public class MazeBug extends Bug {
     private Stack<ArrayList<Location>> crossLocation = new Stack<ArrayList<Location>>();
     private Integer stepCount = 0;
     // final message has been shown
-    private boolean hasShown = false;
+    boolean hasShown = false;
+    // north, east, south, west
+    private int directionWeight[] = new int[4];
 
     /**
      * Constructs a box bug that traces a square of a given side length
@@ -37,11 +39,12 @@ public class MazeBug extends Bug {
      * @param length
      *            the side length
      */
-    public MazeBug() {
-        setColor(Color.GREEN);
+    public AdvancedMazeBug() {
+        setColor(Color.YELLOW);
         ArrayList<Location> startList = new ArrayList<Location>();
         startList.add(null);
         crossLocation.add(startList);
+        Arrays.fill(directionWeight, 1);
     }
 
     /**
@@ -50,7 +53,7 @@ public class MazeBug extends Bug {
     public void act() {
         boolean willMove = canMove();
         if (isEnd) {
-        //to show step count when reach the goal        
+            // to show step count when reach the goal        
             if (!hasShown) {
                 String msg = stepCount.toString() + " steps";
                 JOptionPane.showMessageDialog(null, msg);
@@ -65,6 +68,7 @@ public class MazeBug extends Bug {
 
     /**
      * Find all positions that can be move to.
+     * If all adjacent locations are visited, return last location on the path.
      * 
      * @param loc
      *            the location to detect.
@@ -120,10 +124,30 @@ public class MazeBug extends Bug {
         Random random = new Random();
         ArrayList<Location> validLocations = getValid();
         if (validLocations != null) {
-            next = validLocations.get(random.nextInt(validLocations.size()));
+            int sumOfWeight = 0;
+            ArrayList<Integer> validIndice = new ArrayList<Integer>();
+            for (int i = 0; i < validLocations.size(); ++i) {
+                int indexInDirectionWeight = getLocation().getDirectionToward(validLocations.get(i)) / 90;
+                sumOfWeight += directionWeight[indexInDirectionWeight];
+                validIndice.add(Integer.valueOf(indexInDirectionWeight));
+            }
+
+            int choosenIndex = 0;
+            for (int i = 0, sum = 0, choice = random.nextInt(sumOfWeight); ; ++i) {
+                sum += directionWeight[validIndice.get(i)];
+                if (sum >= choice) {
+                    choosenIndex = validIndice.get(i);
+                    next = validLocations.get(i);
+                    break;
+                }
+            }
             if (next.equals(crossLocation.peek().get(0))) {
+                // backward, minus the opposite direction
+                --directionWeight[(choosenIndex + 2) % 4];
                 crossLocation.pop();
             } else {
+                // forward
+                ++directionWeight[choosenIndex];
                 crossLocation.peek().add(next);
                 ArrayList<Location> nextList = new ArrayList<Location>();
                 nextList.add(getLocation());
