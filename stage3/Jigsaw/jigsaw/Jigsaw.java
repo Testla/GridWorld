@@ -149,7 +149,7 @@ public class Jigsaw {
 	public void printResult(PrintWriter pw) throws IOException{
 		boolean flag = false;
 		if(pw == null){
-			pw = new PrintWriter(new FileWriter("Result.txt"));// 将搜索过程写入D://BFSearchDialog.txt
+			pw = new PrintWriter(new FileWriter("Result.txt", true));// 将搜索过程写入D://BFSearchDialog.txt
 			flag = true;
 		}
 		if (this.isCompleted == true) {
@@ -324,9 +324,9 @@ public class Jigsaw {
 			this.closeList.addElement(this.currentJNode);
 			searchedNodesNum++;
 			
-				// 记录并显示搜索过程
-				pw.println("Searching.....Number of searched nodes:" + this.closeList.size() + "   Current state:" + this.currentJNode.toString());
-				System.out.println("Searching.....Number of searched nodes:" + this.closeList.size() + "   Current state:" + this.currentJNode.toString());
+			// 记录并显示搜索过程
+			pw.println("Searching.....Number of searched nodes:" + this.closeList.size() + "   Current state:" + this.currentJNode.toString());
+			System.out.println("Searching.....Number of searched nodes:" + this.closeList.size() + "   Current state:" + this.currentJNode.toString());
 //            if (searchedNodesNum % 1000 == 0) {
 //                System.out.println(searchedNodesNum);
 //            }			
@@ -433,24 +433,41 @@ public class Jigsaw {
         int sumManhattanDistance = 0,
             numWrongPosition = 0,
             sumSquareManhattanDistance = 0,
+            euclideanDistance = 0,
             numNextWrong = 0;
         for (int i = 1; i < state.length; ++i) {
-            sumManhattanDistance += calcManhattanDistance(i, state[i], dimension);
-            sumSquareManhattanDistance += calcManhattanDistance(i, state[i], dimension)
-                                        * calcManhattanDistance(i, state[i], dimension);
-            numWrongPosition += matchState(state, i) ? 0 : 1;
-            if(i + 1 < state.length
-                    && i % dimension != 0
-                    && jNode.getNodesState()[i] + 1 != jNode.getNodesState()[i + 1])
-                ++numNextWrong;
+            if (state[i] != 0) {
+                sumManhattanDistance += calcManhattanDistance(i, state[i], dimension);
+                sumSquareManhattanDistance += calcManhattanDistance(i, state[i], dimension)
+                                            * calcManhattanDistance(i, state[i], dimension);
+                euclideanDistance += calcEuclideanDistance(i, state[i], dimension);
+                numWrongPosition += matchState(state, i) ? 0 : 1;
+                if(i + 1 < state.length
+                        && i % dimension != 0
+                        && jNode.getNodesState()[i] + 1 != jNode.getNodesState()[i + 1]) {
+                    ++numNextWrong;
+                }
+                if(i + dimension < state.length
+                        && jNode.getNodesState()[i] + dimension != jNode.getNodesState()[i + dimension]) {
+                    ++numNextWrong;
+                }
+//                if ((i % dimension != 0
+//                        && jNode.getNodesState()[i] + 1 == jNode.getNodesState()[i + 1])
+//                || (i + dimension < state.length
+//                        && jNode.getNodesState()[i] + dimension != jNode.getNodesState()[i + dimension])) {
+//                } else {
+//                    ++numNextWrong;
+//                }
+            }
         }
         // 3 4 4 1 1
-        sum = 3 * numWrongPosition
-            + 4 * sumManhattanDistance
-            + 4 * numNextWrong
+        sum = 0 * numWrongPosition
+            + 3 * sumManhattanDistance
+            + 3 * numNextWrong
+            + 1 * euclideanDistance
             + 0 * (int)Math.sqrt(sumSquareManhattanDistance)
             + 1 * boundaryCompletence(state, dimension)
-            + 0 * jNode.getNodeDepth() / 4;
+            + 0 * jNode.getNodeDepth();
         jNode.setEstimatedValue(sum);
 	}
 	
@@ -523,21 +540,36 @@ public class Jigsaw {
         // height and width of unfinished block
         int verticalHeight = down + 1 - up, horizonalWidth = right + 1 - left;
         // finished or only one step left
-        if (verticalHeight + horizonalWidth <= 3)
+        if (verticalHeight == 0)
+            return -1000000000;
+        if (verticalHeight + horizonalWidth <= 3 && (state[24] == 0 || state[20] == 0))
             return -100000000;
-        if (verticalHeight == 2 && horizonalWidth == 2) {
-            return -100;
+//        if (verticalHeight == 2 && horizonalWidth == 2) {
+//            return -100;
+//        }
+        // may be top-left is better since in the end the empty grid is on bottom-right?
+        if (up == left) {
+            int weight[] = new int[]{0, 0, 0, 5000}; 
+    	    return -weight[up];
         }
-	    return 0;
+        return 0;
 	}
-	
+
+	private int calcEuclideanDistance(int a, int b, int sideLength) {
+        a -= 1;
+        b -= 1;
+        int rowA = a / sideLength, rowB = b / sideLength,
+            colA = a % sideLength, colB = b % sideLength;
+        return ((rowA - rowB) * (rowA - rowB) + (colA - colB) * (colA - colB));
+	}
+
 	private boolean matchState(int state[], int position) {
 	    if (position == state[position])
 	        return true;
 	    else
 	        return false;
 	}
-	
+
 	public int getNodeCount() {
 	    return searchedNodesNum;
 	}

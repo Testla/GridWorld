@@ -24,7 +24,7 @@ public class RunnerPart2 {
 		// 生成目标状态对象destNode: {25,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,0};
 		JigsawNode destNode = new JigsawNode(new int[]{25,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,0});  		
 
-		int numTotalTest = 1000, succeedCount = 0;
+		int numTotalTest = 100, succeedCount = 0;
 		double avg = 0;
 		for (int i = 1; i <= numTotalTest; ++i) {
     		// 生成随机初始状态对象startNode：将目标状态打散，生成可解的随机初始状态
@@ -46,7 +46,7 @@ public class RunnerPart2 {
         System.out.println("Total: " + String.valueOf(numTotalTest));
         System.out.println("Passed: " + String.valueOf(succeedCount));
         System.out.println("Pass rate:  " + String.valueOf((double)succeedCount / numTotalTest));
-        System.out.println("Average: " + String.valueOf(avg / succeedCount));
+        System.out.println("Average among passed: " + String.valueOf(avg / succeedCount));
 	}
 
 }
