@@ -352,7 +352,7 @@ public class Jigsaw {
         PrintWriter pw = new PrintWriter(new FileWriter(filePath));
         
         // 访问节点数大于30000个则认为搜索失败
-        int maxNodesNum = 25000;  
+        int maxNodesNum = 1000000;  
         
         // 用以存放某一节点的邻接节点
         Vector<JigsawNode> followJNodes = new Vector<JigsawNode>(); 
@@ -386,9 +386,9 @@ public class Jigsaw {
                 // 记录并显示搜索过程
 //            pw.println("Searching.....Number of searched nodes:" + this.closeList.size() + "   Current state:" + this.currentJNode.toString());
 //            System.out.println("Searching.....Number of searched nodes:" + this.closeList.size() + "   Current state:" + this.currentJNode.toString());
-//            if (searchedNodesNum % 10000 == 0) {
-//                System.out.println(searchedNodesNum);
-//            }
+            if (searchedNodesNum % 10000 == 0) {
+                System.out.println(searchedNodesNum);
+            }
     
             // (2-3)寻找所有与currentJNode邻接且未曾被访问的节点，将它们按代价估值从小到大排序插入openList中
             followJNodes = this.hashFindFollowJNodes(this.currentJNode);
@@ -460,14 +460,15 @@ public class Jigsaw {
 //                }
             }
         }
-        // 3 4 4 1 1
+        // 3 manh 2 next 1 eucli 1 bound 2 linear -4 depth average 16xx
         sum = 0 * numWrongPosition
             + 3 * sumManhattanDistance
-            + 3 * numNextWrong
+            + 2 * numNextWrong
             + 1 * euclideanDistance
             + 0 * (int)Math.sqrt(sumSquareManhattanDistance)
             + 1 * boundaryCompletence(state, dimension)
-            + 0 * jNode.getNodeDepth();
+            + 1 * linearConflict(state, dimension)
+            + -4 * jNode.getNodeDepth();
         jNode.setEstimatedValue(sum);
 	}
 	
@@ -572,5 +573,42 @@ public class Jigsaw {
 
 	public int getNodeCount() {
 	    return searchedNodesNum;
+	}
+	
+	/**
+	 * Two tiles tj and tk are in a linear conflict if tj and tk are in the same line,
+	 * the goal positions of tj and tk are both in that line, tj is to the right of tk
+	 * and goal position of tj is to the left of the goal position of tk.
+	 * @return
+	 */
+	public int linearConflict(int state[], int dimension) {
+	    int result = 0;
+        for (int row = 0; row < dimension; ++row) {
+            Vector<Integer> rowList = new Vector<Integer>(); 
+            for (int col = 0; col < dimension; ++col) {
+                if ((state[row * dimension + col] - 1) / dimension == row) {
+                    for (int i = 0; i < rowList.size(); ++i) {
+                        if (rowList.get(i) > state[row * dimension + col]) {
+                            ++result;
+                        }
+                        rowList.add(Integer.valueOf(state[row * dimension + col]));
+                    }
+                }
+            }
+        }
+        for (int col = 0; col < dimension; ++col) {
+            Vector<Integer> colList = new Vector<Integer>(); 
+            for (int row = 0; row < dimension; ++row) {
+                if ((state[row * dimension + col] - 1) % dimension == col) {
+                    for (int i = 0; i < colList.size(); ++i) {
+                        if (colList.get(i) > state[row * dimension + col]) {
+                            ++result;
+                        }
+                        colList.add(Integer.valueOf(state[row * dimension + col]));
+                    }
+                }
+            }
+        }
+	    return result;
 	}
 }
